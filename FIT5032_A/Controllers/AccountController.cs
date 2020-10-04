@@ -151,6 +151,7 @@ namespace FIT5032_A.Controllers
         {
             if (ModelState.IsValid)
             {
+                ViewBag.PasswordRequirements = "Password has to be at least 6 characters long with one special character";
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

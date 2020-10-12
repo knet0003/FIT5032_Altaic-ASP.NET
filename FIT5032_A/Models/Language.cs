@@ -17,6 +17,7 @@ namespace FIT5032_A.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Language")]
         public string Name { get; set; }
 
         [Required]

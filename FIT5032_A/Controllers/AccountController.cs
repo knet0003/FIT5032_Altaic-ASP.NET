@@ -17,6 +17,7 @@ namespace FIT5032_A.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private FIT5032_Models db = new FIT5032_Models();
 
         public AccountController()
         {
@@ -152,12 +153,18 @@ namespace FIT5032_A.Controllers
             if (ModelState.IsValid)
             {
                 ViewBag.PasswordRequirements = "Password has to be at least 6 characters long with one special character";
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var student = new Student() { FirstName = model.Fname, LastName= model.Lname };
+                UserManager.AddToRole(user.Id, "Student");
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    db.Students.Add(student);
+                    db.SaveChanges();
+
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

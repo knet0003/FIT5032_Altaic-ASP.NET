@@ -18,13 +18,17 @@ namespace FIT5032_A.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Course name")]
         public string Name { get; set; }
 
         [Required]
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
+        [Display(Name = "Start date")]
         public DateTime Start { get; set; }
 
+        [Display(Name = "End date")]
         public DateTime End { get; set; }
 
         public int LanguageId { get; set; }

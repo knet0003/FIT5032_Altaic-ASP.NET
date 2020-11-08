@@ -69,6 +69,8 @@ C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.Owin.Security.Twit
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Newtonsoft.Json.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Owin.dll
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\SendGrid.dll
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\StarkbankEcdsa.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.Helpers.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.Mvc.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.Optimization.dll
@@ -77,6 +79,8 @@ C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.WebPages.Deployme
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.WebPages.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.WebPages.Razor.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\WebGrease.dll
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\SendGrid.pdb
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\SendGrid.xml
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.Helpers.xml
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.Mvc.xml
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\System.Web.Optimization.xml
@@ -105,4 +109,10 @@ C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\obj\Debug\FIT5032_A.csproj.CoreC
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\obj\Debug\FIT5032_A.csproj.CopyComplete
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\obj\Debug\FIT5032_A.dll
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\obj\Debug\FIT5032_A.pdb
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.AspNet.SignalR.Core.pdb
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
 C:\Users\netvi\source\repos\FIT5032_A\FIT5032_A\obj\Debug\FIT5032_A.csprojAssemblyReference.cache

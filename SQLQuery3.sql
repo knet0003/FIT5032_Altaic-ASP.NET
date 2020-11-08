@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[Emails]
+(
+ [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+ [From] VARCHAR(50) NOT NULL,
+ [To] VARCHAR(50) NOT NULL,
+ [Subject] VARCHAR(50) NOT NULL,
+ [Content] VARCHAR(50) NOT NULL,
+ [Attachment] VARCHAR(50) NOT NULL
+)

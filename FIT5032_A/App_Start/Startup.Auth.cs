@@ -54,15 +54,15 @@ namespace FIT5032_A
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "3428192693954213",
+               appSecret: "3428192693954213");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+           {
+                ClientId = "577854137532-im3d0la0b6llc3j9bqngfm0r31oejne6.apps.googleusercontent.com",
+                ClientSecret = "taeC2bxwjG1Nt8ErwpLSu6le"
+            });
         }
     }
 }

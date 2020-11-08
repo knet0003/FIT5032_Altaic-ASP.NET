@@ -34,6 +34,9 @@ namespace FIT5032_A
 
             bundles.Add(new ScriptBundle("~/bundles/mapbox").Include(
                 "~/Scripts/location.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/mapboxzoomed").Include(
+                "~/Scripts/location1.js"));
         }
     }
 }

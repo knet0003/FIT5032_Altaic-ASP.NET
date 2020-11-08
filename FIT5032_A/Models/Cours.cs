@@ -7,7 +7,7 @@ namespace FIT5032_A.Models
     using System.Data.Entity.Spatial;
 
     [Table("Courses")]
-    public partial class Cours
+    public partial class Cours: IValidatableObject
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Cours()
@@ -26,9 +26,11 @@ namespace FIT5032_A.Models
         public string Description { get; set; }
 
         [Display(Name = "Start date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime Start { get; set; }
 
         [Display(Name = "End date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime End { get; set; }
 
         public int LanguageId { get; set; }
@@ -41,5 +43,14 @@ namespace FIT5032_A.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Enrolment> Enrolments { get; set; }
+
+        IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
+        {
+            if (End < Start)
+            {
+                yield return new ValidationResult("EndDate must be greater than StartDate");
+            }
+        }
+
     }
 }

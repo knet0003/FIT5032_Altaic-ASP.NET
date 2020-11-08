@@ -1,0 +1,79 @@
+﻿@model IEnumerable<FIT5032_A.Models.AspNetUser>
+@{
+    ViewBag.Title = "BulkEmailList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Select the recepients</h2>
+@if (User.IsInRole("Administrator"))
+{
+    using (Html.BeginForm())
+    {
+        if (@ViewBag.Result != null)
+        {
+
+            <div class="alert alert-info">@ViewBag.Result</div>
+        }
+        <table class="table">
+            <tr>
+                <th>
+                    <input type="checkbox" disabled />
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+
+                        @Html.CheckBox("isUserSelected", htmlAttributes: new { @value = item.Email, @class = "checkbox" })
+                    </td>
+                    <td class="userEmail">
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+        <a class="btn btn-primary" id="sendBulkEmail" href="/Home/BulkEmailList2">Next</a>
+    }
+
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+
+        $('.checkbox').change(function () {
+            var emails = "";
+            var selected = $('.checkbox:checked');
+            //Getting all the checkboxes checked
+            $.each(selected, function (index, item) {
+                var row = $(this).closest('tr')
+                emails += row.find('.userEmail').text().trim()
+                emails += ","
+            })
+            console.log(emails);
+            $('#selectedEmails').text(emails);
+
+            var a = document.getElementById('sendBulkEmail');
+            a.href = "/Home/BulkEmailList2?id=" + encodeURIComponent(emails);
+        });
+    </script>
+}
+else
+{
+    <div class="jumbotron">
+        <h1>Error</h1>
+        <p class="lead">You do not have the authorisation to be here</p>
+    </div>
+}

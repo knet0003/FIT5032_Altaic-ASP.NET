@@ -2,9 +2,11 @@
 $(".events").each(function () {
     var title = $(".title", this).text().trim();
     var start = $(".start", this).text().trim();
+    var end = $(".end", this).text().trim();
     var event = {
         "title": title,
-        "start": start
+        "start": start,
+        "end": end
     };
     events.push(event);
 });
@@ -18,4 +20,5 @@ $("#calendar").fullCalendar({
         var uri = "/Cours/Create?date=" + m;
         $(location).attr('href', uri);
     }
-});
+}
+);

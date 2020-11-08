@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using FIT5032_A.Models;
+using Microsoft.AspNet.Identity;
 
 namespace FIT5032_A.Controllers
 {
@@ -15,10 +16,21 @@ namespace FIT5032_A.Controllers
         private FIT5032_Models db = new FIT5032_Models();
 
         // GET: Enrolments
+        [Authorize]
         public ActionResult Index()
         {
-            var enrolments = db.Enrolments.Include(e => e.Cours).Include(e => e.Student);
-            return View(enrolments.ToList());
+            var userId = User.Identity.GetUserId();
+            List<Enrolment> enrolments = new List<Enrolment>();
+            if (User.IsInRole("Administrator"))
+            {
+                enrolments = db.Enrolments.ToList(); //.Include(e => e.Student).Include(e => e.CourseId).ToList();
+            }
+            else
+            {
+                Student student = db.Students.Where(s => s.UserId == userId).First();
+                enrolments = db.Enrolments.Where(e => e.StudentId == student.Id).ToList();
+            }
+            return View(enrolments);
         }
 
         // GET: Enrolments/Details/5
@@ -37,10 +49,14 @@ namespace FIT5032_A.Controllers
         }
 
         // GET: Enrolments/Create
+        [Authorize]
         public ActionResult Create()
         {
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
-            ViewBag.StudentId = new SelectList(db.Students, "Id", "FirstName");
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name");
+                ViewBag.StudentId = new SelectList(db.Students, "Id", "FirstName");
+            }
             return View();
         }
 
@@ -49,28 +65,66 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Date,StudentId,CourseId")] Enrolment enrolment)
+        [Authorize]
+        public ActionResult Create([Bind(Include = "Id, StudentId, CourseId")] Enrolment enrolment)
         {
-            if (ModelState.IsValid)
+            if (User.Identity.IsAuthenticated)
             {
-                db.Enrolments.Add(enrolment);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    var userId = User.Identity.GetUserId();
+                    enrolment.Date = DateTime.UtcNow;
 
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", enrolment.CourseId);
-            ViewBag.StudentId = new SelectList(db.Students, "Id", "FirstName", enrolment.StudentId);
+                    if (User.IsInRole("Administrator"))
+                    {
+
+                    }
+                    else
+                    {
+                        Student student = db.Students.Where(s => s.UserId == userId).First();
+                        enrolment.StudentId = student.Id;
+                    }
+                    List<Cours> courses = new List<Cours>();
+                    var studentenrolments = db.Enrolments.Where(e => e.StudentId == enrolment.StudentId).ToList();
+                    foreach (Enrolment en in studentenrolments)
+                    {
+                        Cours course = db.Courses.Where(c => c.Id == en.CourseId).First();
+                        courses.Add(course);
+                    }
+                    List<int> courseids = new List<int>();
+                    foreach (Cours co in courses)
+                    {
+                        courseids.Add(co.Id);
+                    }
+                    if (courseids.Contains(enrolment.CourseId))
+                    {
+                        ViewBag.Result = "Already enrolled in this course";
+                        return RedirectToAction("Index");
+                    }
+                    db.Enrolments.Add(enrolment);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", enrolment.CourseId);
+                ViewBag.StudentId = new SelectList(db.Students, "Id", "FirstName", enrolment.StudentId);
+            }
             return View(enrolment);
         }
 
         // GET: Enrolments/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Enrolment enrolment = db.Enrolments.Find(id);
+            Enrolment enrolment = new Enrolment();
+            if (User.IsInRole("Administrator"))
+            {
+                enrolment = db.Enrolments.Find(id);
+            }
             if (enrolment == null)
             {
                 return HttpNotFound();
@@ -85,27 +139,36 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "Id,Date,StudentId,CourseId")] Enrolment enrolment)
         {
-            if (ModelState.IsValid)
+            if (User.IsInRole("Administrator"))
             {
-                db.Entry(enrolment).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(enrolment).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", enrolment.CourseId);
+                ViewBag.StudentId = new SelectList(db.Students, "Id", "FirstName", enrolment.StudentId);
             }
-            ViewBag.CourseId = new SelectList(db.Courses, "Id", "Name", enrolment.CourseId);
-            ViewBag.StudentId = new SelectList(db.Students, "Id", "FirstName", enrolment.StudentId);
             return View(enrolment);
         }
 
         // GET: Enrolments/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Enrolment enrolment = db.Enrolments.Find(id);
+            Enrolment enrolment = new Enrolment();
+            if (User.Identity.IsAuthenticated)
+            {
+                enrolment = db.Enrolments.Find(id);
+            }
             if (enrolment == null)
             {
                 return HttpNotFound();
@@ -116,11 +179,15 @@ namespace FIT5032_A.Controllers
         // POST: Enrolments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            Enrolment enrolment = db.Enrolments.Find(id);
-            db.Enrolments.Remove(enrolment);
-            db.SaveChanges();
+            if (User.Identity.IsAuthenticated)
+            {
+                Enrolment enrolment = db.Enrolments.Find(id);
+                db.Enrolments.Remove(enrolment);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

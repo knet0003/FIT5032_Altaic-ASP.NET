@@ -1,52 +1,95 @@
 ﻿@model IEnumerable<FIT5032_A.Models.Enrolment>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Enrolments";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-@if (User.IsInRole("Administrator"))
-{
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>}
-    <table class="table">
-        <tr>
+<h2>Enrolments</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Cours.Name)
+        </th>
+        @if (User.IsInRole("Student"))
+        {
             <th>
-                @Html.DisplayNameFor(model => model.Cours.Name)
+                @Html.DisplayNameFor(model => model.Cours.School)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cours.School.Address)
+            </th>
+        }
+        @if (User.IsInRole("Administrator"))
+        {
             <th>
                 @Html.DisplayNameFor(model => model.Student.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Date)
+                @Html.DisplayNameFor(model => model.Student.LastName)
             </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cours.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Student.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id = item.Id })
-        </td>
-        @if (User.IsInRole("Administrator"))
-        {
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>}
-        </tr>
         }
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th></th>
+    </tr>
 
-    </table>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cours.Name)
+            </td>
+            @if (User.IsInRole("Student"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cours.School.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cours.School.Address)
+                </td>
+            }
+            @if (User.IsInRole("Administrator"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.LastName)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.Id })
+            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            }
+        </tr>
+    }
+
+</table>
+
+@section Scripts {
+
+    @Scripts.Render("~/Scripts/DataTables/jquery.dataTables.js")
+    @Scripts.Render("~/Scripts/DataTables/dataTables.bootstrap.js")
+    <script>
+            $(document).ready(function () {
+                $('.table').DataTable();
+            });
+    </script>
+}
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css"
+      rel="stylesheet" />
+

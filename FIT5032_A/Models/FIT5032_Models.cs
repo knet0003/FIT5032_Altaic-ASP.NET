@@ -50,5 +50,9 @@ namespace FIT5032_A.Models
                 .WithRequired(e => e.Student)
                 .WillCascadeOnDelete(false);
         }
+
+        public System.Data.Entity.DbSet<FIT5032_A.Models.Email> Emails { get; set; }
+
+        public System.Data.Entity.DbSet<FIT5032_A.Models.AspNetUser> AspNetUsers { get; set; }
     }
 }

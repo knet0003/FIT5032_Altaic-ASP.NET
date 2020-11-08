@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FIT5032_A.Models;
+using System.Data.Entity.Validation;
 
 namespace FIT5032_A.Controllers
 {
@@ -67,6 +68,7 @@ namespace FIT5032_A.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ValidateInput(true)]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -148,23 +150,22 @@ namespace FIT5032_A.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ValidateInput(true)]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                ViewBag.PasswordRequirements = "Password has to be at least 6 characters long with one special character";
-                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                var student = new Student() { FirstName = model.Fname, LastName= model.Lname };
-                UserManager.AddToRole(user.Id, "Student");
-
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    db.Students.Add(student);
-                    db.SaveChanges();
-
-
+                    ViewBag.PasswordRequirements = "Password has to be at least 6 characters long with one special character";
+                    var user = new ApplicationUser() { UserName = model.Fname+model.Lname, Email = model.Email };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        var student = new Student() { FirstName = model.Fname, LastName = model.Lname, UserId = user.Id };
+                        db.Students.Add(student);
+                        db.SaveChanges();
+                        UserManager.AddToRole(user.Id, "Student");
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -172,8 +173,9 @@ namespace FIT5032_A.Controllers
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
+                    }
+
+                    AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form

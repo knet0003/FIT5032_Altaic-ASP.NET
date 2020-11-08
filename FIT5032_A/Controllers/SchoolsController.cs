@@ -36,9 +36,14 @@ namespace FIT5032_A.Controllers
         }
 
         // GET: Schools/Create
+        [Authorize]
         public ActionResult Create()
         {
-            return View();
+            if (User.IsInRole("Administrator"))
+            {
+                return View();
+            }
+            return HttpNotFound();
         }
 
         // POST: Schools/Create
@@ -46,26 +51,34 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create([Bind(Include = "Id,Name,Address,Phone,Latitude,Longitude")] School school)
         {
-            if (ModelState.IsValid)
+            if (User.IsInRole("Administrator"))
             {
-                db.Schools.Add(school);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Schools.Add(school);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
             return View(school);
         }
 
         // GET: Schools/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            School school = db.Schools.Find(id);
+            School school = new School();
+            if (User.IsInRole("Administrator"))
+            {
+                school = db.Schools.Find(id);
+            }
             if (school == null)
             {
                 return HttpNotFound();
@@ -78,25 +91,34 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "Id,Name,Address,Phone,Latitude,Longitude")] School school)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(school).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (User.IsInRole("Administrator"))
+                {
+                    db.Entry(school).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(school);
         }
 
         // GET: Schools/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            School school = db.Schools.Find(id);
+            School school = new School();
+            if (User.IsInRole("Administrator"))
+            {
+                school = db.Schools.Find(id);
+            }
             if (school == null)
             {
                 return HttpNotFound();
@@ -107,11 +129,15 @@ namespace FIT5032_A.Controllers
         // POST: Schools/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            School school = db.Schools.Find(id);
-            db.Schools.Remove(school);
-            db.SaveChanges();
+            if (User.IsInRole("Administrator"))
+            {
+                School school = db.Schools.Find(id);
+                db.Schools.Remove(school);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

@@ -36,9 +36,15 @@ namespace FIT5032_A.Controllers
         }
 
         // GET: Languages/Create
+        [Authorize]
+        [ValidateInput(true)]
         public ActionResult Create()
         {
-            return View();
+            if (User.IsInRole("Administrator"))
+            {
+                return View();
+            }
+            return HttpNotFound();
         }
 
         // POST: Languages/Create
@@ -46,26 +52,35 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(true)]
+        [Authorize]
         public ActionResult Create([Bind(Include = "Id,Name,Description")] Language language)
         {
-            if (ModelState.IsValid)
+            if (User.IsInRole("Administrator"))
             {
-                db.Languages.Add(language);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Languages.Add(language);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
             return View(language);
         }
 
         // GET: Languages/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Language language = db.Languages.Find(id);
+            Language language = new Language();
+            if (User.IsInRole("Administrator"))
+            {
+                language = db.Languages.Find(id);
+            }
             if (language == null)
             {
                 return HttpNotFound();
@@ -78,25 +93,33 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "Id,Name,Description")] Language language)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(language).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+            if (User.IsInRole("Administrator")){
+                if (ModelState.IsValid)
+                {
+                    db.Entry(language).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(language);
         }
 
         // GET: Languages/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Language language = db.Languages.Find(id);
+            Language language = new Language();
+            if (User.IsInRole("Administrator"))
+            {
+                language = db.Languages.Find(id);
+            }
             if (language == null)
             {
                 return HttpNotFound();
@@ -107,11 +130,15 @@ namespace FIT5032_A.Controllers
         // POST: Languages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            Language language = db.Languages.Find(id);
-            db.Languages.Remove(language);
-            db.SaveChanges();
+            if (User.IsInRole("Administrator"))
+            {
+                Language language = db.Languages.Find(id);
+                db.Languages.Remove(language);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

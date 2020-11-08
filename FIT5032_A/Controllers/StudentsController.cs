@@ -15,19 +15,29 @@ namespace FIT5032_A.Controllers
         private FIT5032_Models db = new FIT5032_Models();
 
         // GET: Students
+        [Authorize]
         public ActionResult Index()
         {
-            return View(db.Students.ToList());
+            if (User.IsInRole("Administrator"))
+            {
+                return View(db.Students.ToList());
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         // GET: Students/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = db.Students.Find(id);
+            Student student = new Student();
+            if (User.IsInRole("Administrator"))
+            {
+                student = db.Students.Find(id);
+            }
             if (student == null)
             {
                 return HttpNotFound();
@@ -36,9 +46,14 @@ namespace FIT5032_A.Controllers
         }
 
         // GET: Students/Create
+        [Authorize]
         public ActionResult Create()
         {
-            return View();
+            if (User.IsInRole("Administrator"))
+            {
+                return View();
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         // POST: Students/Create
@@ -46,26 +61,34 @@ namespace FIT5032_A.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,UserId")] Student student)
         {
-            if (ModelState.IsValid)
+            if (User.IsInRole("Administrator"))
             {
-                db.Students.Add(student);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Students.Add(student);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
             return View(student);
         }
 
         // GET: Students/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = db.Students.Find(id);
+            Student student = new Student();
+            if (User.IsInRole("Administrator"))
+            {
+                student = db.Students.Find(id);
+            }
             if (student == null)
             {
                 return HttpNotFound();
@@ -80,11 +103,14 @@ namespace FIT5032_A.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,UserId")] Student student)
         {
-            if (ModelState.IsValid)
+            if (User.IsInRole("Administrator"))
             {
-                db.Entry(student).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(student).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(student);
         }
@@ -96,7 +122,11 @@ namespace FIT5032_A.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = db.Students.Find(id);
+            Student student = new Student();
+            if (User.IsInRole("Administrator"))
+            {
+                student = db.Students.Find(id);
+            }
             if (student == null)
             {
                 return HttpNotFound();
@@ -109,9 +139,12 @@ namespace FIT5032_A.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Student student = db.Students.Find(id);
-            db.Students.Remove(student);
-            db.SaveChanges();
+            if (User.IsInRole("Administrator"))
+            {
+                Student student = db.Students.Find(id);
+                db.Students.Remove(student);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

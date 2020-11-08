@@ -1,7 +1,7 @@
 ﻿const TOKEN = "pk.eyJ1Ijoia25ldDAwMDMiLCJhIjoiY2tmb3E2bmFrMXFnZDJycXVxejhkODcwdCJ9.h7ezpvgvTStdgBPtSX5zrg";
 var locations = [];
 $(".coordinates").each(function () {
-    var longitude = $(".longitude", this).text().trim();
+    var longitude = $(".longitude", this).text().trim(); 
     var latitude = $(".latitude", this).text().trim();
     var description = $(".description", this).text().trim();
     // Create a point data structure to hold the values.
@@ -32,8 +32,8 @@ mapboxgl.accessToken = TOKEN;
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v10',
-    zoom: 5,
-    center: [locations[0].longitude, locations[0].latitude]
+    zoom: 3,
+    center: [133.785641, -25.751718]
 });
 
 map.addControl(new mapboxgl.NavigationControl())

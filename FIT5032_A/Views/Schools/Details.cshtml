@@ -10,12 +10,24 @@
 <div>
     <h4>School</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
+          type="text/css" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+          type="text/css" />
+    <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <div id="map" style="height:400px"></div>
+    <dl class="coordinates">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
 
-        <dd>
+        <dd class="description">
             @Html.DisplayFor(model => model.Name)
         </dd>
 
@@ -39,7 +51,7 @@
             @Html.DisplayNameFor(model => model.Latitude)
         </dt>
 
-        <dd>
+        <dd class="latitude">
             @Html.DisplayFor(model => model.Latitude)
         </dd>
 
@@ -47,7 +59,7 @@
             @Html.DisplayNameFor(model => model.Longitude)
         </dt>
 
-        <dd>
+        <dd class="longitude">
             @Html.DisplayFor(model => model.Longitude)
         </dd>
 
@@ -61,3 +73,9 @@
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+@section Scripts {
+    @Scripts.Render("~/bundles/mapboxzoomed")
+}

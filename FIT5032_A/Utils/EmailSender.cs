@@ -13,13 +13,13 @@ namespace FIT5032_A.Utils
     public class EmailSender
     {
         // Please use your API KEY here.
-        private const String API_KEY = "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";
+        private const String API_KEY = "";
 
         
         public void Send(String toEmail, String subject, String contents, String filePath, String fileExtention)
         {
             var client = new SendGridClient(API_KEY);
-            var from = new EmailAddress("netviki16@gmail.com", "FIT5032 Example Email User");
+            var from = new EmailAddress("", "FIT5032 Example Email User");
             var to = new EmailAddress(toEmail, "");
             var plainTextContent = contents;
             var htmlContent = "<p>" + contents + "</p>";
@@ -40,7 +40,7 @@ namespace FIT5032_A.Utils
         public void Send_To_Many(List<EmailAddress> toEmails, String subject, String contents, String filePath)
         {
             var client = new SendGridClient(API_KEY);
-            var from = new EmailAddress("netviki16@gmail.com", "FIT5032 Example Email User");
+            var from = new EmailAddress("", "FIT5032 Example Email User");
             var tos = toEmails;
             var plainTextContent = contents;
             var htmlContent = "<p>" + contents + "</p>";
